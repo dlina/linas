@@ -86,24 +86,6 @@ authors:
 # https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
 #bing_verify:
 
-# Links to include in footer navigation
-# For external links add external: true
-links:
-  - title: Home
-    url: /
-    external: false
-    icon: home
-  - title: Recent Posts
-    url: /recent
-  - title: Categories
-    url: /categories
-  - title: Linas
-    url: /linas
-  - title: Talks
-    url: /talks
-  - title: About
-    url: /about
-
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    Europe/Berlin
 future:      true
@@ -113,7 +95,7 @@ markdown:    kramdown
 # paginate_path: "page:num"
 
 # https://github.com/mojombo/jekyll/wiki/Permalinks
-permalink:   /:title/
+permalink:   /linas/:title/
 
 kramdown:
   auto_ids: true
