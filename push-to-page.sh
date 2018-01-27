@@ -8,6 +8,7 @@ git checkout gh-pages
 git pull
 rm -rf *
 cp -r /tmp/_site/* .
+rm -rf /tmp/_site
 git add --all
 git commit -m "update site"
 git push
