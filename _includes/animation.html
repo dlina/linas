@@ -1,0 +1,88 @@
+<div class="row" id="animation">
+<div class="small-12 small-centered columns">
+	<h2 id="SomethingBeforeAnAct"></h2>
+	<h3 id="act"></h3>
+	<h4 id="scene"></h4>
+	<div id="vis"></div>
+<div class="progress large-12 success">
+      <span id="progressiveBar" style="width: 0%" class="meter"></span>
+    </div>
+	<ul id="cast"></ul>
+<script>
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on("tick", tick);
+
+var svg = d3.select("#vis").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var node = svg.selectAll(".node"),
+    link = svg.selectAll(".link");
+
+
+function rmNodes(rm) {
+  for (m = 0; m < rm.length; m++) {
+    for (i = nodes.length - 1; i >= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m < rm.length; m++) {
+    for (i = links.length - 1; i >= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id < b.id)
+    return -1;
+  else if (a.id > b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + "-" + d.target.id; });
+  link.enter().insert("line", ".node").attr("class", "link");
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append("circle").attr("class", function(d) { return "node " + d.id; }).attr("r", 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i < nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '<svg height="16" width="16"> <circle cx="8" cy="8" r="8" class="node '+nodes[i].id+'"></circle> </svg> '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+
+  link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+}
+</script>
+
+<script src="https://dlina.github.io/data/{{ page.networkdata }}"></script>

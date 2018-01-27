@@ -1,0 +1,135 @@
+<div class="row">
+  <div class="medium-12 columns">
+    <div id="network-static"></div>
+  </div>
+  <!--div class="medium-3 columns end"><div class="col-md-3">
+                <p>The colors indicate the gender of a speaker:<ul style="list-style:none;">
+                    <li>
+                            <svg width="10" height="10">
+                                <circle class="node" cx="5" cy="5" r="5" style="fill: rgb(255, 127, 14);"></circle>
+                            </svg> female</li>
+                    <li>
+                            <svg width="10" height="10">
+                                <circle class="node" cx="5" cy="5" r="5" style="fill: rgb(174, 199, 232);"></circle>
+                            </svg> male</li>
+                    <li>
+                            <svg width="10" height="10">
+                                <circle class="node" cx="5" cy="5" r="5" style="fill: rgb(31, 119, 180);"></circle>
+                            </svg> undefined</li>
+                </ul>
+                </p>
+            </div>
+  </div -->
+</div>
+
+<div class="row">
+  <div class="small-1 small-centered columns"><div id="option">
+   <i class="fa fa-refresh fa-4x" onclick="updateData()"></i>
+</div></div>
+</div>
+
+
+<script>
+
+// ** RELOAD
+function updateData() {
+d3.selectAll("#network-static svg").remove();
+nodes = [];
+links = [];
+var n = 200;
+var width = 960,
+    height = 600;
+
+
+var svg = d3.select("#network-static").append("svg")
+    .attr("id", "net")
+    .attr("width", width)
+    .attr("height", height);
+
+var loading = svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", height / 2)
+    .attr("dy", ".35em")
+    .style("text-anchor", "middle")
+    .text("Simulating. One moment please…");
+
+d3.json("https://dlina.github.io/data/{{ page.networkdata }}", function(error, graph) {
+var forcestat = d3.layout.force()
+    .nodes(graph.nodes)
+    .links(graph.links)
+.linkDistance(170)
+.charge(-20)
+.gravity(.01)
+    .size([width, height]);
+
+var color = d3.scale.category20();
+
+
+
+// Use a timeout to allow the rest of the page to load first.
+setTimeout(function() {
+
+  // Run the layout a fixed number of times.
+  // The ideal number of times scales with graph complexity.
+  // Of course, don't run too long—you'll hang the page!
+  forcestat.start();
+  for (var i = n * n; i > 0; --i) forcestat.tick();
+  forcestat.stop();
+
+ var link = svg.selectAll(".link")
+      .data(graph.links)
+    .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+
+  var gnodes = svg.selectAll('g.gnode')
+     .data(graph.nodes)
+     .enter()
+     .append('g')
+     .classed('gnode', true);
+
+  var node = gnodes.append("circle")
+      .attr("class", "node")
+      .attr("r", function(d) { return Math.sqrt(d.weight) + 5 })
+      .style("fill", function(d) { return color(d.group); });
+
+  var labels = gnodes.append("text")
+      .text(function(d) { return d.name; });
+
+
+  svg.selectAll("line")
+      .data(graph.links)
+    .enter().append("line")
+      .attr("class", "link")
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+  svg.selectAll("circle")
+      .data(graph.nodes)
+    .enter().append("circle")
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .attr("r", function(d) { return Math.sqrt(d.weight) + 5 })
+      .style("fill", function(d) { return color(d.group); });
+
+ forcestat.on("end", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    gnodes.attr("transform", function(d) {
+        return 'translate(' + [d.x, d.y] + ')';
+    });
+  })
+
+  loading.remove();
+}, 10);
+});
+}
+updateData();
+
+</script>
