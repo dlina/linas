@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>HEBBEL, FRIEDRICH: AGNES BERNAUER (1852)</title>
+<meta name="description" content="Digital Humanities and Literary Studies">
+<meta name="keywords" content="">
+
+
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hebbel, Friedrich: Agnes Bernauer (1852)">
+<meta property="og:description" content="Digital Humanities and Literary Studies">
+<meta property="og:url" content="https://dlina.github.io/network43/">
+<meta property="og:site_name" content="Network Analysis of Dramatic Texts">
+<meta property="og:image" content="https://dlina.github.io/images/">
+
+
+
+
+
+<link rel="canonical" href="https://dlina.github.io/network43/">
+<link href="https://dlina.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Network Analysis of Dramatic Texts Feed">
+
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link href='https://dlina.github.io/assets/css/vendor/webfonts.css' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://dlina.github.io/assets/css/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="https://dlina.github.io/assets/css/vendor/normalize.css">
+    <link rel="stylesheet" href="https://dlina.github.io/assets/css/vendor/nprogress.css">
+    <link rel="stylesheet" href="https://dlina.github.io/assets/css/vendor/foundation.min.css">
+    <link rel="stylesheet" href="https://dlina.github.io/assets/css/style.css">
+    <link rel="stylesheet" href="https://dlina.github.io/assets/css/post.css">
+
+
+
+<script>
+	// redirect to https!
+	if (window.location.protocol != 'https:')
+	window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+</script>
+
+<!-- Icons -->
+<!-- 16x16 -->
+<link rel="shortcut icon" href="https://dlina.github.io/favicon.ico">
+<!-- 32x32 -->
+<link rel="shortcut icon" href="https://dlina.github.io/favicon.png">
+<!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
+<link rel="apple-touch-icon-precomposed" href="https://dlina.github.io/images/apple-touch-icon-precomposed.png">
+<!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://dlina.github.io/images/apple-touch-icon-72x72-precomposed.png">
+<!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://dlina.github.io/images/apple-touch-icon-114x114-precomposed.png">
+<!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://dlina.github.io/images/apple-touch-icon-144x144-precomposed.png">
+<script src="https://dlina.github.io/assets/js/d3.v3.min.js"></script>
+
+
+
+</head>
+<body class="post-template" itemscope itemtype="http://schema.org/WebPage">  
+<!-- multiple author support: --> 
+
+        <main id="notepad-post-container-simple" class="notepad-post-container-simple" role="main">
+            <header class="notepad-post-header-simple">
+                <div class="notepad-post-menu-header-simple">
+
+                    <a class="notepad-blog-logo" href="https://dlina.github.io">
+                        <img src="https://dlina.github.io/images/logo.png" alt="Blog Logo" />
+                    </a>
+
+                <div class="notepad-blog-menu">      
+    <div class="notepad-mobile-menu show-for-small">
+        <a href="#"><i class="fa fa-bars"></i></a>
+    </div>
+    <ul class="notepad-menu">
+        <li class="notepad-mobile-close-btn show-for-small text-right">
+            <a href="#"><i class="fa fa-times"></i></a>
+        </li>
+            
+           <li><a href="https://dlina.github.io/feed.xml" title="Atom/RSS feed"><i class="icon-rss"></i> Feed</a></li>
+    </ul>
+
+</div>
+            </div>
+
+                <div class="notepad-post-title-simple row">
+                    <div class="small-12 columns">
+                        <div class="notepad-post-meta-simple">
+                            <h1>Hebbel, Friedrich: Agnes Bernauer (1852)</h1>
+                            <p> <strong><time datetime="2015-06-20T00:00:00+02:00">20 Jun 2015</time></strong></p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+        <article class="notepad-post-content post tag-simple">
+            <div class="row" id="layout-network-content"><div class="row collapse wide">
+  <div class="medium-12 columns">
+<ul id="netinputs">
+<li>Link Distance [10, 400] (<a href="https://github.com/mbostock/d3/wiki/Force-Layout#linkDistance">info</a>):
+<ul>
+<li> <input id="linkDistance" type="range" min="10" max="400" value="200" /></li>
+</ul>
+</li>
+<li>Gravity [0.000, 1.000] (<a href="https://github.com/mbostock/d3/wiki/Force-Layout#gravity">info</a>):
+<ul>
+<li><input id="grav" type="range" min="0" max="1000" value="100" /></li>
+</ul>
+</li>
+<li>Charge [-1000, 1000] (<a href="https://github.com/mbostock/d3/wiki/Force-Layout#charge">info</a>):
+<ul>
+<li> <input id="charge" type="range" min="-1000" max="1000" value="-50" /></li>
+</ul>
+</li>
+</ul>
+  	<div id="netsticky"></div>
+  </div>
+</div>
+<script>
+// get the input values and render the network immediatly
+d3.select("input#linkDistance").on("change", function() {
+	d3.selectAll("#netsticky svg").remove();
+	draw(this.value, document.getElementById("grav").value , document.getElementById("charge").value );
+});
+d3.select("input#grav").on("change", function() {
+	d3.selectAll("#netsticky svg").remove();
+	draw( document.getElementById("linkDistance").value, this.value , document.getElementById("charge").value );
+});
+d3.select("input#charge").on("change", function() {
+	d3.selectAll("#netsticky svg").remove();
+	draw( document.getElementById("linkDistance").value , document.getElementById("grav").value , this.value );
+});
+
+function draw(linkDst, grav, charg){
+d3.json("https://dlina.github.io/data/43.json", function(error, graph) {
+
+// lets see if we can guess a good size
+var sum = graph.nodes.length
+var width = 400 + sum * 15,
+    height = 400 + sum * 10;
+
+var color = d3.scale.category20();
+var force = d3.layout.force()
+    .charge( charg )
+    .linkDistance( linkDst )
+.gravity( grav / 1000 )
+    .size([width, height]);
+var svg = d3.select("#netsticky").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+
+  force
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .start();
+  var link = svg.selectAll("#netsticky .link")
+      .data(graph.links)
+    .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+  var gnodes = svg.selectAll('#netsticky g.gnode')
+     .data(graph.nodes)
+     .enter()
+     .append('g')
+     .classed('gnode', true);
+
+var drag = force.drag()
+    .on("dragstart", dragstart);
+  var node = gnodes.append("circle")
+      .attr("class", "node")
+      .attr("r", function(d) { return Math.sqrt(d.weight) + 5 })
+      .style("fill", function(d) { return color(d.group); })
+	.on("dblclick", dblclick)
+      .call(drag);
+function dblclick(d) {
+  d3.select(this).classed("fixed", d.fixed = false);
+}
+function dragstart(d) {
+  d3.select(this).classed("fixed", d.fixed = true);
+}
+  var labels = gnodes.append("text")
+      .text(function(d) { return d.name; });
+
+  force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+    gnodes.attr("transform", function(d) {
+        return 'translate(' + [d.x, d.y] + ')';
+    });
+  })
+});
+// end draw
+};
+</script>
+
+<div class="row">
+  <div class="medium-12 columns">
+    <div id="network-static"></div>
+  </div>
+  <!--div class="medium-3 columns end"><div class="col-md-3">
+                <p>The colors indicate the gender of a speaker:<ul style="list-style:none;">
+                    <li>
+                            <svg width="10" height="10">
+                                <circle class="node" cx="5" cy="5" r="5" style="fill: rgb(255, 127, 14);"></circle>
+                            </svg> female</li>
+                    <li>
+                            <svg width="10" height="10">
+                                <circle class="node" cx="5" cy="5" r="5" style="fill: rgb(174, 199, 232);"></circle>
+                            </svg> male</li>
+                    <li>
+                            <svg width="10" height="10">
+                                <circle class="node" cx="5" cy="5" r="5" style="fill: rgb(31, 119, 180);"></circle>
+                            </svg> undefined</li>
+                </ul>
+                </p>
+            </div>
+  </div -->
+</div>
+
+<div class="row">
+  <div class="small-1 small-centered columns"><div id="option">
+   <i class="fa fa-refresh fa-4x" onclick="updateData()"></i>
+</div></div>
+</div>
+
+<script>
+
+// ** RELOAD
+function updateData() {
+d3.selectAll("#network-static svg").remove();
+nodes = [];
+links = [];
+var n = 200;
+var width = 960,
+    height = 600;
+
+
+var svg = d3.select("#network-static").append("svg")
+    .attr("id", "net")
+    .attr("width", width)
+    .attr("height", height);
+
+var loading = svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", height / 2)
+    .attr("dy", ".35em")
+    .style("text-anchor", "middle")
+    .text("Simulating. One moment please…");
+
+d3.json("https://dlina.github.io/data/43.json", function(error, graph) {
+var forcestat = d3.layout.force()
+    .nodes(graph.nodes)
+    .links(graph.links)
+.linkDistance(170)
+.charge(-20)
+.gravity(.01)
+    .size([width, height]);
+
+var color = d3.scale.category20();
+
+
+
+// Use a timeout to allow the rest of the page to load first.
+setTimeout(function() {
+
+  // Run the layout a fixed number of times.
+  // The ideal number of times scales with graph complexity.
+  // Of course, don't run too long—you'll hang the page!
+  forcestat.start();
+  for (var i = n * n; i > 0; --i) forcestat.tick();
+  forcestat.stop();
+
+ var link = svg.selectAll(".link")
+      .data(graph.links)
+    .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+
+  var gnodes = svg.selectAll('g.gnode')
+     .data(graph.nodes)
+     .enter()
+     .append('g')
+     .classed('gnode', true);
+
+  var node = gnodes.append("circle")
+      .attr("class", "node")
+      .attr("r", function(d) { return Math.sqrt(d.weight) + 5 })
+      .style("fill", function(d) { return color(d.group); });
+
+  var labels = gnodes.append("text")
+      .text(function(d) { return d.name; });
+
+
+  svg.selectAll("line")
+      .data(graph.links)
+    .enter().append("line")
+      .attr("class", "link")
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+  svg.selectAll("circle")
+      .data(graph.nodes)
+    .enter().append("circle")
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .attr("r", function(d) { return Math.sqrt(d.weight) + 5 })
+      .style("fill", function(d) { return color(d.group); });
+
+ forcestat.on("end", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    gnodes.attr("transform", function(d) {
+        return 'translate(' + [d.x, d.y] + ')';
+    });
+  })
+
+  loading.remove();
+}, 10);
+});
+}
+updateData();
+
+</script>
+
+
+            </div>
+        </article>
+        <div class="cf"></div>
+        <div class="row text-center">
+            <section class="notepad-post-share">
+                <a class="twitter-icon" href="https://twitter.com/intent/tweet?text=&quot;Hebbel, Friedrich: Agnes Bernauer (1852)&quot;%20https://dlina.github.io/network43/%20via%20&#64;"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;" title="Share on Twitter">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="facebook-icon" href="https://www.facebook.com/sharer/sharer.php?u=https://dlina.github.io/network43/"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;" title="Share on Facebook">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="google-icon" href="https://plus.google.com/share?url=https://dlina.github.io/network43/"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;" title="Share on Google+">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+            </section>
+        </div>
+        <div class="cf"></div>
+        
+
+
+ 
+        
+        <div class="cf"></div>
+        
+        <div class="cf"></div>
+
+    <footer class="notepad-site-footer">
+    <div class="copyright">
+         <section><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width: 0; margin: 10px; height: 30px; margin-left: 0;" src="https://dlina.github.io/images/cc-by.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. <br/>
+<a href="https://dlina.github.io/about">Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</a> (2018)
+</section>
+<br/>
+<section>Generated by Jekyll on 2018-01-28T00:14:41+01:00<br/>
+Revision build version </section>
+    </div>
+    <div class="social-icons">
+
+        
+        <a href="http://twitter.com/#DLINA">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-twitter fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+        
+        
+        <a href="http://github.com/dlina">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+        </a>
+        
+        
+    </div>
+
+    <div class="cf"></div>
+</footer>
+ 
+</main>    
+    <script src="https://dlina.github.io/assets/js/vendor/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="https://dlina.github.io/assets/js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+    <script src="https://dlina.github.io/assets/js/vendor/modernizr.js"></script>
+    <script src="https://dlina.github.io/assets/js/foundation.min.js"></script>
+    
+    <script src="https://dlina.github.io/assets/js/notepad.js"></script>
+    <script src="https://dlina.github.io/assets/js/scripts.min.js"></script>
+    <script src="https://dlina.github.io/assets/js/vendor/nprogress.js"></script>
+
+    <script>
+      $(document).foundation();
+    </script>
+    <script type='text/javascript'>console.log("HMFaysal Notepad Theme Version 2.0");</script>
+    <script type='text/javascript'>console.log("https://alum.mit.edu/www/hmfaysal");</script>
+
+
+<script>NProgress.start();var interval=setInterval(function(){NProgress.inc()},1000);jQuery(window).load(function(){clearInterval(interval);NProgress.done()});jQuery(window).unload(function(){NProgress.start()});</script>
+ 
+</body>
+</html>
