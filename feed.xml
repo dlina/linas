@@ -1,50 +1,2218 @@
----
-layout: none
----
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-{% assign add_protocol = false %}
-{% assign protocol = site.url | split: '/' | first %}
-{% if site.url != '' and protocol != 'http:' and protocol != 'https:' %}
-  {% assign site_url = site.url | prepend: 'http:' %}
-  {% assign add_protocol = true %}
-{% else %}
-  {% assign site_url = site.url %}
-{% endif %}
-<title type="text">{{ site.title }}</title>
+
+
+
+<title type="text">Network Analysis of Dramatic Texts</title>
 <generator uri="https://github.com/mojombo/jekyll">Jekyll</generator>
-<link rel="self" type="application/atom+xml" href="{{ site_url }}/feed.xml" />
-<link rel="alternate" type="text/html" href="{{ site_url }}/" />
-<updated>{{ site.time | date_to_xmlschema }}</updated>
-<id>{{ site_url }}/</id>
+<link rel="self" type="application/atom+xml" href="http://localhost:4000/feed.xml" />
+<link rel="alternate" type="text/html" href="http://localhost:4000/" />
+<updated>2018-01-27T23:24:46+01:00</updated>
+<id>http://localhost:4000/</id>
 <author>
-  <name>{{ site.owner.name }}</name>
-  <uri>{{ site_url }}/</uri>
-  <email>{{ site.owner.email }}</email>
+  <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+  <uri>http://localhost:4000/</uri>
+  <email></email>
 </author>
-{% for post in site.posts limit:20 %}
+
 
 <entry>
-  <title type="html"><![CDATA[{{ post.title | cdata_escape }}]]></title>
-  <link rel="alternate" type="text/html" href="{% if post.link %}{{ post.link }}{% else %}{{ site_url }}{{ post.url }}{% endif %}"/>
-  <id>{{ site_url }}{{ post.id }}</id>
-  {% if post.modified %}<published>{{ post.date | date_to_xmlschema }}</published>
-  <updated>{{ post.modified }}T00:00:00-00:00</updated>
-  {% else %}<published>{{ post.date | date_to_xmlschema }}</published>
-  <updated>{{ post.date | date_to_xmlschema }}</updated>{% endif %}
+  <title type="html"><![CDATA[Hartleben, Otto Erich: Hanna Jagert (1893)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation99/"/>
+  <id>http://localhost:4000/linas/animation99</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
   <author>
-    <name>{{ site.owner.name }}</name>
-    <uri>{{ site_url }}</uri>
-    <email>{{ site.owner.email }}</email>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
   </author>
-  {% for tag in post.tags %}<category scheme="{{ site_url }}/tags/#{{ tag | uri_escape }}" term="{{ tag }}" />{% endfor %}
+  
   <content type="html">
-  {% if add_protocol %}
-    {{ post.content | xml_escape | replace: site.url, site_url }}
-  {% else %}
-    {{ post.content | xml_escape }}
-  {% endif %}
-  &lt;p&gt;&lt;a href=&quot;{{ site_url }}{{ post.url }}&quot;&gt;{{ post.title }}&lt;/a&gt; was originally published by {{ site.owner.name }} at &lt;a href=&quot;{{ site_url }}&quot;&gt;{{ site.title }}&lt;/a&gt; on {{ post.date | date: "%B %d, %Y" }}.&lt;/p&gt;</content>
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation99.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation99/&quot;&gt;Hartleben, Otto Erich: Hanna Jagert (1893)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
 </entry>
-{% endfor %}
+
+
+<entry>
+  <title type="html"><![CDATA[Thoma, Ludwig: Erster Klasse (1910)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation98/"/>
+  <id>http://localhost:4000/linas/animation98</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation98.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation98/&quot;&gt;Thoma, Ludwig: Erster Klasse (1910)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Scheerbart, Paul: Die Wurzeln der Wohlhabenheit (1904)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation97/"/>
+  <id>http://localhost:4000/linas/animation97</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation97.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation97/&quot;&gt;Scheerbart, Paul: Die Wurzeln der Wohlhabenheit (1904)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Schiller, Friedrich: Kabale und Liebe (1784)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation96/"/>
+  <id>http://localhost:4000/linas/animation96</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation96.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation96/&quot;&gt;Schiller, Friedrich: Kabale und Liebe (1784)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Sonnleithner, Joseph Ferdinand von: Fidelio (1805)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation95/"/>
+  <id>http://localhost:4000/linas/animation95</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation95.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation95/&quot;&gt;Sonnleithner, Joseph Ferdinand von: Fidelio (1805)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Lortzing, Albert (Gustav): Zar und Zimmermann (1837)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation94/"/>
+  <id>http://localhost:4000/linas/animation94</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation94.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation94/&quot;&gt;Lortzing, Albert (Gustav): Zar und Zimmermann (1837)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Kaiser, Friedrich: Die Schule des Armen oder Zwei Millionen (1847)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation93/"/>
+  <id>http://localhost:4000/linas/animation93</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation93.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation93/&quot;&gt;Kaiser, Friedrich: Die Schule des Armen oder Zwei Millionen (1847)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Birch-Pfeiffer, Charlotte: Vatersorgen (1850)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation92/"/>
+  <id>http://localhost:4000/linas/animation92</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation92.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation92/&quot;&gt;Birch-Pfeiffer, Charlotte: Vatersorgen (1850)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Uhland, Ludwig: Ernst Herzog von Schwaben (1818)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation91/"/>
+  <id>http://localhost:4000/linas/animation91</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation91.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation91/&quot;&gt;Uhland, Ludwig: Ernst Herzog von Schwaben (1818)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Beer, Michael: Struensee (1828)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation90/"/>
+  <id>http://localhost:4000/linas/animation90</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation90.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation90/&quot;&gt;Beer, Michael: Struensee (1828)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Gotter, Friedrich Wilhelm: Der Dorfjahrmarkt (1775)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation9/"/>
+  <id>http://localhost:4000/linas/animation9</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation9.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation9/&quot;&gt;Gotter, Friedrich Wilhelm: Der Dorfjahrmarkt (1775)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Schnitzler, Arthur: Anatol (1891)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation89/"/>
+  <id>http://localhost:4000/linas/animation89</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation89.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation89/&quot;&gt;Schnitzler, Arthur: Anatol (1891)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Lessing, Gotthold Ephraim: Emilia Galotti (1772)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation88/"/>
+  <id>http://localhost:4000/linas/animation88</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation88.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation88/&quot;&gt;Lessing, Gotthold Ephraim: Emilia Galotti (1772)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Lessing, Gotthold Ephraim: Miß Sara Sampson (1755)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation87/"/>
+  <id>http://localhost:4000/linas/animation87</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation87.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation87/&quot;&gt;Lessing, Gotthold Ephraim: Miß Sara Sampson (1755)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Schiller, Friedrich: Die Piccolomini (1799)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation86/"/>
+  <id>http://localhost:4000/linas/animation86</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation86.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation86/&quot;&gt;Schiller, Friedrich: Die Piccolomini (1799)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Büchner, Georg: Dantons Tod (1834)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation85/"/>
+  <id>http://localhost:4000/linas/animation85</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation85.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation85/&quot;&gt;Büchner, Georg: Dantons Tod (1834)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Panizza, Oskar: Das Liebeskonzil (1895)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation84/"/>
+  <id>http://localhost:4000/linas/animation84</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation84.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation84/&quot;&gt;Panizza, Oskar: Das Liebeskonzil (1895)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Nestroy, Johann: Der Talisman (1843)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation83/"/>
+  <id>http://localhost:4000/linas/animation83</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation83.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation83/&quot;&gt;Nestroy, Johann: Der Talisman (1843)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Goethe, Johann Wolfgang von: Torquato Tasso (1788)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation82/"/>
+  <id>http://localhost:4000/linas/animation82</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation82.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation82/&quot;&gt;Goethe, Johann Wolfgang von: Torquato Tasso (1788)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
+
+<entry>
+  <title type="html"><![CDATA[Rosenow, Emil: Kater Lampe (1902)]]></title>
+  <link rel="alternate" type="text/html" href="http://localhost:4000/linas/animation81/"/>
+  <id>http://localhost:4000/linas/animation81</id>
+  <published>2016-04-18T00:00:00+02:00</published>
+  <updated>2016-04-18T00:00:00+02:00</updated>
+  <author>
+    <name>Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke</name>
+    <uri>http://localhost:4000</uri>
+    <email></email>
+  </author>
+  
+  <content type="html">
+  
+    &lt;div class=&quot;row&quot; id=&quot;animation&quot;&gt;
+&lt;div class=&quot;small-12 small-centered columns&quot;&gt;
+	&lt;h2 id=&quot;SomethingBeforeAnAct&quot;&gt;&lt;/h2&gt;
+	&lt;h3 id=&quot;act&quot;&gt;&lt;/h3&gt;
+	&lt;h4 id=&quot;scene&quot;&gt;&lt;/h4&gt;
+	&lt;div id=&quot;vis&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;progress large-12 success&quot;&gt;
+      &lt;span id=&quot;progressiveBar&quot; style=&quot;width: 0%&quot; class=&quot;meter&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+	&lt;ul id=&quot;cast&quot;&gt;&lt;/ul&gt;
+&lt;script&gt;
+var width = 840,
+    height = 500;
+
+var nodes = [],
+    links = [];
+
+var force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .charge(-400)
+    .linkDistance(100)
+    .size([width, height])
+    .on(&quot;tick&quot;, tick);
+
+var svg = d3.select(&quot;#vis&quot;).append(&quot;svg&quot;)
+    .attr(&quot;width&quot;, width)
+    .attr(&quot;height&quot;, height);
+
+var node = svg.selectAll(&quot;.node&quot;),
+    link = svg.selectAll(&quot;.link&quot;);
+
+
+function rmNodes(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = nodes.length - 1; i &gt;= 0; i--) {
+      if( nodes[i].id === rm[m] ) { nodes.splice(i,1); }
+    }
+  }
+}
+function rmLinks(rm) {
+  for (m = 0; m &lt; rm.length; m++) {
+    for (i = links.length - 1; i &gt;= 0; i--) {
+      if( links[i].source.id === rm[m] || links[i].target.id === rm[m] ) { links.splice(i,1); }
+    }
+  }
+}
+function compare(a,b) {
+  if (a.id &lt; b.id)
+    return -1;
+  else if (a.id &gt; b.id)
+    return 1;
+  else
+    return 0;
+}
+
+function start() {
+  link = link.data(force.links(), function(d) { return d.source.id + &quot;-&quot; + d.target.id; });
+  link.enter().insert(&quot;line&quot;, &quot;.node&quot;).attr(&quot;class&quot;, &quot;link&quot;);
+  link.exit().remove();
+
+  node = node.data(force.nodes(), function(d) { return d.id;});
+  node.enter().append(&quot;circle&quot;).attr(&quot;class&quot;, function(d) { return &quot;node &quot; + d.id; }).attr(&quot;r&quot;, 8);
+  node.exit().remove();
+
+// add a dynamic legend
+var cast = document.getElementById('cast');
+cast.innerHTML = '';
+for (i=0; i &lt; nodes.length; i++){
+	var entry = document.createElement('li');
+	entry.innerHTML = '&lt;svg height=&quot;16&quot; width=&quot;16&quot;&gt; &lt;circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;8&quot; class=&quot;node '+nodes[i].id+'&quot;&gt;&lt;/circle&gt; &lt;/svg&gt; '+nodes[i].name;
+	cast.appendChild(entry);
+}
+  force.start();
+}
+
+function tick() {
+  node.attr(&quot;cx&quot;, function(d) { return d.x; })
+      .attr(&quot;cy&quot;, function(d) { return d.y; })
+
+  link.attr(&quot;x1&quot;, function(d) { return d.source.x; })
+      .attr(&quot;y1&quot;, function(d) { return d.source.y; })
+      .attr(&quot;x2&quot;, function(d) { return d.target.x; })
+      .attr(&quot;y2&quot;, function(d) { return d.target.y; });
+}
+&lt;/script&gt;
+
+&lt;script src=&quot;https://dlina.github.io/data/animation81.js&quot;&gt;&lt;/script&gt;
+
+&lt;/div&gt;&lt;/div&gt;
+
+  
+  &lt;p&gt;&lt;a href=&quot;http://localhost:4000/linas/animation81/&quot;&gt;Rosenow, Emil: Kater Lampe (1902)&lt;/a&gt; was originally published by Frank Fischer, Mathias Göbel, Dario Kampkaspar, Peer Trilcke at &lt;a href=&quot;http://localhost:4000&quot;&gt;Network Analysis of Dramatic Texts&lt;/a&gt; on April 18, 2016.&lt;/p&gt;</content>
+</entry>
+
 </feed>
