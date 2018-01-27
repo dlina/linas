@@ -95,7 +95,7 @@ markdown:    kramdown
 # paginate_path: "page:num"
 
 # https://github.com/mojombo/jekyll/wiki/Permalinks
-permalink:   /linas/:title/
+permalink:   /:title/
 
 kramdown:
   auto_ids: true
